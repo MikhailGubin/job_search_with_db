@@ -1,24 +1,28 @@
 from typing import Any
 
 from src.head_hunter_api import HeadHunterAPI
+from src.vacancy import Vacancy
 
 
 def get_hh_data(employers_id_list: list[str]) -> list[dict[str, Any]]:
-    """ Получение данных о фирмах и их вакансиях с помощью API hh.ru """
+    """
+    Собирает данные о фирмах и их вакансиях, полученные с помощью API hh.ru, в один список
+    """
 
     data = []
-    employer_data = []
-    vacancies_data = []
 
     hh_api = HeadHunterAPI()
 
     for employer_id in employers_id_list:
         employer_data = hh_api.get_employer(employer_id)
         vacancies_data = hh_api.get_vacancies(employer_id)
-        data.append({
+        vacancies_list = Vacancy.cast_to_object_list(vacancies_data)
+        data.append(
+            {
             'employer': employer_data,
-            'vacancies': vacancies_data
-        })
+            'vacancies': vacancies_list
+        }
+        )
 
     return data
 

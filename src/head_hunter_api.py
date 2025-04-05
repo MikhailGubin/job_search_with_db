@@ -17,7 +17,10 @@ class HeadHunterAPI:
         """
         self.__url_vacancies = "https://api.hh.ru/vacancies"
         self.__url_employers = "https://api.hh.ru/employers"
-        self.__params = {"employer_id": "", "page": 0, "per_page": 10}
+        self.__params = {
+            "employer_id": "",
+            "page": 0, "per_page": 20
+        }
         self.__vacancies = []
         self.__employer = []
 
@@ -66,7 +69,7 @@ class HeadHunterAPI:
             # https://api.hh.ru/employers/{employer_id}
         except requests.exceptions.RequestException:
             print("Ошибка при работе с HTTP запросом")
-            return []
+            return {}
         data_api = answer_api.json()
         self.__employer = {
             "name": data_api['name'],

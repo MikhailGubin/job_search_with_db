@@ -38,7 +38,7 @@ class Vacancy:
     @staticmethod
     def __valid_salary(salary: dict | None) -> dict:
         """Проверяет валидацию зарплаты"""
-        # if isinstance(salary, dict) and isinstance(salary['from'], float):
+
         if isinstance(salary, dict):
             if not isinstance(salary["from"], float | int):
                 salary["from"] = 0
@@ -84,7 +84,9 @@ class Vacancy:
         return {
             "name": self.name,
             "vacancy_url": self.vacancy_url,
-            "salary": self.salary,
+            "salary_from": self.salary['from'],
+            "salary_to": self.salary['to'],
+            "currency": self.salary['currency'],
             "requirement": self.requirement,
         }
 
