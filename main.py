@@ -2,6 +2,7 @@ import os
 
 from src.config import config
 from src.create_db import create_db
+from src.dbmanager import DBManager
 from src.get_hh_data import get_hh_data
 from src.save_data_to_db import save_data_to_db
 
@@ -20,7 +21,9 @@ def main():
     data = get_hh_data(employer_ids)
     create_db('hh_data', params_for_db)
     save_data_to_db(data, 'hh_data', params_for_db)
-
+    data_manager = DBManager()
+    data_manager.get_companies_and_vacancies_count(params_for_db)
 
 if __name__ == '__main__':
     main()
+

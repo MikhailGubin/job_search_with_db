@@ -6,7 +6,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def config(filename="database.ini", section="postgresql"):
+def config(filename: str ="database.ini", section: str ="postgresql") -> dict:
     # создаю объект класса ConfigParser
     parser = ConfigParser()
     #Задаю путь к файлу

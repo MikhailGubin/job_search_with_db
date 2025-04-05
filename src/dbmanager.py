@@ -1,9 +1,26 @@
+import psycopg2
+
+from src.config import config
+
+
 class DBManager:
     """ Класс, который может подключаться к базе данных и работать с ней """
 
-    def get_companies_and_vacancies_count(self):
+    @staticmethod
+    def get_companies_and_vacancies_count(conn_params: dict):
         """ Получает список всех компаний и количество вакансий у каждой компании """
-        pass
+
+        conn = psycopg2.connect(dbname='postgres', **conn_params)
+        conn.autocommit = True
+        with conn.cursor() as cur:
+            cur.execute("SELECT name, open_vacancies FROM employers")
+
+            rows = cur.fetchall()
+            for row in rows:
+                print(row)
+
+        conn.commit()
+        conn.close()
 
     def get_all_vacancies(self):
         """
@@ -23,3 +40,10 @@ class DBManager:
     def get_vacancies_with_keyword(self):
         """ Получает список всех вакансий, в названии которых содержатся переданные в метод слова """
         pass
+
+
+if __name__ == "__main__":
+
+    params_for_db = config()
+    data_manager = DBManager()
+    data_manager.get_companies_and_vacancies_count(params_for_db)
