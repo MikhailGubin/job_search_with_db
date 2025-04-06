@@ -14,7 +14,7 @@ def save_data_to_db(data: list[dict[str, Any]], database_name: str, params: dict
 
             cur.execute(
                 """
-                INSERT INTO employers (name, open_vacancies, description, area)
+                INSERT INTO employers (employer_title, open_vacancies, description, area)
                 VALUES (%s, %s, %s, %s)
                 RETURNING employer_id
                 """,
@@ -22,7 +22,9 @@ def save_data_to_db(data: list[dict[str, Any]], database_name: str, params: dict
                  employer_data['area'])
             )
             employer_id = cur.fetchone()[0]
+            print(employer_id)
             vacancies_data = data_object['vacancies']
+            print(vacancies_data)
 
             for vacancy in vacancies_data:
 

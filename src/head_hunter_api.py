@@ -92,5 +92,5 @@ if __name__ == "__main__":
     #     '561525', '25022', '11679140',
     #     '5599143'
     #                 ]
-    print(hh_api.get_employer("78638"))
-    print(hh_api.get_vacancies("78638"))
+    print(hh_api.get_employer("11732555"))
+    print(hh_api.get_vacancies("11732555"))

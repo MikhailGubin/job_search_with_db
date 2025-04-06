@@ -10,7 +10,7 @@ def create_db(database_name: str, params: dict):
     conn.autocommit = True
     cur = conn.cursor()
 
-    cur.execute(f"DROP DATABASE {database_name}")
+    cur.execute(f"DROP DATABASE IF EXISTS {database_name}")
     cur.execute(f"CREATE DATABASE {database_name}")
 
     conn.close()
@@ -21,7 +21,7 @@ def create_db(database_name: str, params: dict):
         cur.execute("""
             CREATE TABLE employers (
                 employer_id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
+                employer_title VARCHAR(255) NOT NULL,
                 open_vacancies INTEGER,
                 description TEXT,                
                 area VARCHAR(100)
@@ -49,3 +49,5 @@ def create_db(database_name: str, params: dict):
 if __name__ == "__main__":
     params_for_db = config()
     create_db('hh_data', params_for_db)
+
+
