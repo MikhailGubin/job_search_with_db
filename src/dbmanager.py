@@ -30,7 +30,7 @@ class DBManager:
 
             employers_list = cur.fetchall()
             for employer in employers_list:
-                print(f"Название компании: {employer[0]}. Количество вакансий: {employer[1]}")
+                print(f"Название компании: {employer[0]}. Количество вакансий: {employer[1]}\n")
 
         conn.commit()
         conn.close()
