@@ -32,7 +32,7 @@ class Vacancy:
     def __valid_attribute(attribute: str) -> str:
         """Проверяет валидацию атрибута"""
         if not attribute:
-            return 'Не указано'
+            return "Не указано"
         return attribute
 
     @staticmethod
@@ -84,9 +84,9 @@ class Vacancy:
         return {
             "name": self.name,
             "vacancy_url": self.vacancy_url,
-            "salary_from": self.salary['from'],
-            "salary_to": self.salary['to'],
-            "currency": self.salary['currency'],
+            "salary_from": self.salary["from"],
+            "salary_to": self.salary["to"],
+            "currency": self.salary["currency"],
             "requirement": self.requirement,
         }
 

@@ -1,12 +1,10 @@
 import psycopg2
 
-from src.config import config
 
-
-def create_db(params: dict, database_name: str = 'hh_data'):
+def create_db(params: dict, database_name: str = "hh_data"):
     """Создание базы данных и таблиц для сохранения данных о работодателях и вакансиях"""
 
-    conn = psycopg2.connect(dbname='postgres', **params)
+    conn = psycopg2.connect(dbname="postgres", **params)
     conn.autocommit = True
     cur = conn.cursor()
 
@@ -18,7 +16,8 @@ def create_db(params: dict, database_name: str = 'hh_data'):
     conn = psycopg2.connect(dbname=database_name, **params)
 
     with conn.cursor() as cur:
-        cur.execute("""
+        cur.execute(
+            """
             CREATE TABLE employers (
                 employer_id SERIAL PRIMARY KEY,
                 employer_title VARCHAR(255) NOT NULL,
@@ -26,10 +25,12 @@ def create_db(params: dict, database_name: str = 'hh_data'):
                 description TEXT,                
                 area VARCHAR(100)
             )
-        """)
+        """
+        )
 
     with conn.cursor() as cur:
-        cur.execute("""
+        cur.execute(
+            """
             CREATE TABLE vacancies (
                 vacancy_id SERIAL PRIMARY KEY,
                 employer_id INT REFERENCES employers(employer_id),
@@ -40,14 +41,8 @@ def create_db(params: dict, database_name: str = 'hh_data'):
                 currency VARCHAR (3),
                 requirement TEXT                
             )
-        """)
+        """
+        )
 
     conn.commit()
     conn.close()
-
-
-if __name__ == "__main__":
-    params_for_db = config()
-    create_db(params_for_db)
-
-

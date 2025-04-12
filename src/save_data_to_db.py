@@ -1,8 +1,9 @@
 from typing import Any
+
 import psycopg2
 
 
-def save_data_to_db(data: list[dict[str, Any]], params: dict, database_name: str = 'hh_data'):
+def save_data_to_db(data: list[dict[str, Any]], params: dict, database_name: str = "hh_data"):
     """Сохраняет данные о работодателях и вакансиях в базу данных"""
 
     conn = psycopg2.connect(dbname=database_name, **params)
@@ -10,7 +11,7 @@ def save_data_to_db(data: list[dict[str, Any]], params: dict, database_name: str
     with conn.cursor() as cur:
 
         for data_object in data:
-            employer_data = data_object['employer']
+            employer_data = data_object["employer"]
 
             cur.execute(
                 """
@@ -18,11 +19,15 @@ def save_data_to_db(data: list[dict[str, Any]], params: dict, database_name: str
                 VALUES (%s, %s, %s, %s)
                 RETURNING employer_id
                 """,
-                (employer_data['name'], employer_data['open_vacancies'], employer_data['description'],
-                 employer_data['area'])
+                (
+                    employer_data["name"],
+                    employer_data["open_vacancies"],
+                    employer_data["description"],
+                    employer_data["area"],
+                ),
             )
             employer_id = cur.fetchone()[0]
-            vacancies_data = data_object['vacancies']
+            vacancies_data = data_object["vacancies"]
 
             for vacancy in vacancies_data:
 
@@ -35,12 +40,16 @@ def save_data_to_db(data: list[dict[str, Any]], params: dict, database_name: str
                     )
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """,
-                    (employer_id, vacancy.name, vacancy.vacancy_url,
-                     vacancy.salary['from'], vacancy.salary['to'],
-                     vacancy.salary['currency'], vacancy.requirement
-                     )
+                    (
+                        employer_id,
+                        vacancy.name,
+                        vacancy.vacancy_url,
+                        vacancy.salary["from"],
+                        vacancy.salary["to"],
+                        vacancy.salary["currency"],
+                        vacancy.requirement,
+                    ),
                 )
-
 
     conn.commit()
     conn.close()

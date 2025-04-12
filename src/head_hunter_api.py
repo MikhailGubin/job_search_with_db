@@ -17,10 +17,7 @@ class HeadHunterAPI:
         """
         self.__url_vacancies = "https://api.hh.ru/vacancies"
         self.__url_employers = "https://api.hh.ru/employers"
-        self.__params = {
-            "employer_id": "",
-            "page": 0, "per_page": 20
-        }
+        self.__params = {"employer_id": "", "page": 0, "per_page": 20}
         self.__vacancies = []
         self.__employer = []
 
@@ -57,47 +54,31 @@ class HeadHunterAPI:
             return []
         return self.__vacancies
 
-
     def get_employer(self, employer_id: str) -> dict:
         """
         Получает информацию о работодателях с платформы hh.ru
         """
 
         try:
-            answer_api = requests.get(f'https://api.hh.ru/employers/{employer_id}')
+            answer_api = requests.get(f"https://api.hh.ru/employers/{employer_id}")
         except requests.exceptions.RequestException:
             print("Ошибка при работе с HTTP запросом")
             return {}
 
         data_api = answer_api.json()
 
-        if not data_api.get('name'):
-            print(f'Работодатель с данным id {employer_id} не найден')
+        if not data_api.get("name"):
+            print(f"Работодатель с данным id {employer_id} не найден")
             return {}
 
         self.__employer = {
-            "name": data_api['name'],
-            "open_vacancies": data_api.get('open_vacancies'),
-            "description": data_api.get('description'),
-            "area": data_api.get('area').get('name')
+            "name": data_api["name"],
+            "open_vacancies": data_api.get("open_vacancies"),
+            "description": data_api.get("description"),
+            "area": data_api.get("area").get("name"),
         }
 
         if not self.__employer:
             print("Отсутствует работодатель с заданным идентификатором")
             return {}
         return self.__employer
-
-
-if __name__ == "__main__":
-    hh_api = HeadHunterAPI()
-    employer_ids = [
-        '78638', '4181', '80',
-        '2324020', '11732555', '640251',
-        '561525', '25022', '1455',
-        '5599143'
-                    ]
-    # for employer_id in employer_ids:
-    #     print(hh_api.get_employer(employer_id))
-    print(hh_api.get_employer('0042431455'))
-    # print(hh_api.get_vacancies("11732555"))
-    # 1455
