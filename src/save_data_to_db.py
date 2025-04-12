@@ -2,7 +2,7 @@ from typing import Any
 import psycopg2
 
 
-def save_data_to_db(data: list[dict[str, Any]], database_name: str, params: dict):
+def save_data_to_db(data: list[dict[str, Any]], params: dict, database_name: str = 'hh_data'):
     """Сохраняет данные о работодателях и вакансиях в базу данных"""
 
     conn = psycopg2.connect(dbname=database_name, **params)
@@ -22,9 +22,7 @@ def save_data_to_db(data: list[dict[str, Any]], database_name: str, params: dict
                  employer_data['area'])
             )
             employer_id = cur.fetchone()[0]
-            print(employer_id)
             vacancies_data = data_object['vacancies']
-            print(vacancies_data)
 
             for vacancy in vacancies_data:
 

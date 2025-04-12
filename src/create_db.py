@@ -3,7 +3,7 @@ import psycopg2
 from src.config import config
 
 
-def create_db(database_name: str, params: dict):
+def create_db(params: dict, database_name: str = 'hh_data'):
     """Создание базы данных и таблиц для сохранения данных о работодателях и вакансиях"""
 
     conn = psycopg2.connect(dbname='postgres', **params)
@@ -48,6 +48,6 @@ def create_db(database_name: str, params: dict):
 
 if __name__ == "__main__":
     params_for_db = config()
-    create_db('hh_data', params_for_db)
+    create_db(params_for_db)
 
 

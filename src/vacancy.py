@@ -96,10 +96,10 @@ class Vacancy:
         text_salary = f'{self.salary['from']} - {self.salary["to"]} {self.salary['currency']}'
 
         if not self.salary["to"] and not self.salary["from"]:
-            text_salary = "Зарплата не указана"
+            text_salary = "не указана"
         elif not self.salary["to"]:
             text_salary = f"от {self.salary['from']} {self.salary['currency']}"
         elif not self.salary["from"]:
             text_salary = f'до {self.salary["to"]} {self.salary['currency']}'
 
-        return f"{self.name}\n{self.vacancy_url}\n{text_salary}\n{self.requirement}"
+        return f"Название вакансии: {self.name}\nЗарплата: {text_salary}\nСсылка на вакансию: {self.vacancy_url}"

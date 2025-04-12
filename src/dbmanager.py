@@ -1,6 +1,6 @@
 import psycopg2
 
-from src.config import config
+from src.vacancy import Vacancy
 
 
 class DBManager:
@@ -27,9 +27,9 @@ class DBManager:
 	            GROUP BY employer_title
 	            """)
 
-            rows = cur.fetchall()
-            for row in rows:
-                print(row)
+            employers_list = cur.fetchall()
+            for employer in employers_list:
+                print(f'Название компании: {employer[0]}. Количество вакансий: {employer[1]}')
 
         conn.commit()
         conn.close()
@@ -46,14 +46,13 @@ class DBManager:
         with conn.cursor() as cur:
             cur.execute("""
             SELECT 
-            employer_title, vacancy_name, salary_from, salary_to, currency, vacancy_url
+            employer_title, vacancy_name, salary_from, salary_to, currency, vacancy_url, requirement
             FROM vacancies    
             JOIN employers USING(employer_id)
             """)
 
-            rows = cur.fetchall()
-            for row in rows:
-                print(row)
+            vacancies_list = cur.fetchall()
+            self.print_data(vacancies_list)
 
         conn.commit()
         conn.close()
@@ -69,29 +68,31 @@ class DBManager:
                     FROM vacancies
                     """)
 
-            rows = cur.fetchall()
-            for row in rows:
-                print(row)
+            average_salary = int(cur.fetchone()[0])
+            print(f'Средняя зарплата по всем вакансиям составляет: {average_salary} RUR\n')
 
         conn.commit()
         conn.close()
 
     def get_vacancies_with_higher_salary(self) -> None:
-        """ Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям. """
+        """ Получает список всех вакансий, у которых зарплата выше средней зарплаты по всем вакансиям. """
         conn = psycopg2.connect(dbname=self.database_name, **self.conn_params)
         conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute("""
-            SELECT * FROM vacancies
+            SELECT 
+            employer_title, vacancy_name, salary_from, salary_to, currency, vacancy_url, requirement
+            FROM vacancies    
+            JOIN employers USING(employer_id)            
             WHERE salary_from > (
             SELECT AVG(salary_from) AS avg_salary FROM vacancies
+            WHERE currency  = 'RUR'
                                 )
             ORDER BY employer_id
                             """)
 
-            rows = cur.fetchall()
-            for row in rows:
-                print(row)
+            vacancies_list = cur.fetchall()
+            self.print_data(vacancies_list)
 
         conn.commit()
         conn.close()
@@ -102,25 +103,27 @@ class DBManager:
         conn.autocommit = True
         with conn.cursor() as cur:
             cur.execute(f"""
-            SELECT * FROM vacancies
+            SELECT 
+            employer_title, vacancy_name, salary_from, salary_to, currency, vacancy_url, requirement
+            FROM vacancies    
+            JOIN employers USING(employer_id)
             WHERE vacancy_name LIKE '%{keyword}%' 
             ORDER BY employer_id
                                     """)
 
-            rows = cur.fetchall()
-            for row in rows:
-                print(row)
+            vacancies_list = cur.fetchall()
+
+            if not vacancies_list:
+                print("По Вашему запросу ничего не найдено.")
+
+            self.print_data(vacancies_list)
 
         conn.commit()
         conn.close()
 
-
-if __name__ == "__main__":
-
-    params_for_db = config()
-    data_manager = DBManager('hh_data',params_for_db)
-    # data_manager.get_companies_and_vacancies_count()
-    # data_manager.get_all_vacancies()
-    # data_manager.get_avg_salary()
-    # data_manager.get_vacancies_with_higher_salary()
-    data_manager.get_vacancies_with_keyword('разработчик')
+    @staticmethod
+    def print_data(data_from_db: list[tuple]) -> None:
+        """ Переводит данные из БД в понятный текст """
+        for data in data_from_db:
+            salary_dict = {"from": data[2], "to": data[3], "currency": data[4]}
+            print(f"Название компании: {data[0]}\n", Vacancy(data[1], data[5], salary_dict, data[6]), "\n")

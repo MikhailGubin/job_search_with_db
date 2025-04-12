@@ -7,11 +7,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def config(filename: str ="database.ini", section: str ="postgresql") -> dict:
-    # создаю объект класса ConfigParser
+    """ Получает словарь с данными для подключения к БД  из файла database.ini """
+
+    # Создаю объект класса ConfigParser
     parser = ConfigParser()
     #Задаю путь к файлу
     path_to_file = os.path.join(BASE_DIR, "data", filename)
-    # читаю файл с параметрами
+    # Читаю файл с параметрами
     parser.read(path_to_file)
     db = {}
     if parser.has_section(section):
